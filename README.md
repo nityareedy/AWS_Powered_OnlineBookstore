@@ -1,80 +1,73 @@
-## AWS Powered Online Bookstore 
 
-AWS Bookstore Demo App is a full-stack sample web application that creates a storefront (and backend) for customers to shop for fictitious books. The entire application can be created with a single CloudFormation template. **[Try out the deployed application here](https://d2h3ljlsmzojxz.cloudfront.net/)**!
+## AWS Powered Online Bookstore 
+TEAM : Serverless Seekers 
+1) Nitya Reddy Yerram
+2) Dhruv Khut
+3) Pratik Kamanahalli Mallikarjuna
+4) Rahul Dhingra
+
+The AWS Bookstore Demo Application is a cloud-native, serverless web application simulating an online bookstore. It allows users to browse, search, view product details, add items to a cart, and place orders. The application integrates multiple AWS services to demonstrate scalability, high availability, and a cost-effective cloud architecture.. **[Try out the deployed application here](https://d2h3ljlsmzojxz.cloudfront.net/)**!
 
 You can browse and search for books, look at recommendations and best sellers, manage your cart, checkout, view your orders, and more.  Get started with building your own below!
 &nbsp;
-
-## License Summary
-
-This sample code is made available under a modified MIT license. See the LICENSE file.
-
 &nbsp;
-
 ## Outline
-
-- [Overview](#overview)
-- [Instructions](#instructions)
-  - [Getting started](#getting-started)
-  - [Cleaning up](#cleaning-up)
-- [Architecture](#architecture)
-- [Implementation details](#implementation-details)
-  - [Amazon DynamoDB](#amazon-dynamodb)
-  - [Amazon API Gateway](#amazon-api-gateway)
-  - [AWS Lambda](#aws-lambda)
-  - [Amazon ElastiCache for Redis](#amazon-elasticache-for-redis)
-  - [Amazon Neptune](#amazon-neptune)
-  - [Amazon ElasticSearch](#amazon-elasticsearch)
-  - [AWS IAM](#aws-iam)
-  - [Amazon Cognito](#amazon-cognito)
-  - [Amazon Cloudfront and Amazon S3](#amazon-cloudfront-and-amazon-s3)
-  - [Amazon VPC](#amazon-vpc)
-  - [Amazon Cloudwatch](#amazon-cloudwatch)
-  - [AWS CodeCommit, AWS CodePipeline, AWS CodeBuild](#aws-codecommit-aws-codepipeline-aws-codebuild)
-- [Running your web application locally](#running-your-web-application-locally)
-- [Considerations for demo purposes](#considerations-for-demo-purposes)
-- [Known limitations](#known-limitations)
-- [Additions, forks, and contributions](#additions-forks-and-contributions)
-- [Questions and contact](#questions-and-contact)
+Key Features
+1) User authentication and authorization
+2) Browse and search books
+3) Add books to shopping cart
+4) Place orders with order history
+5) Fully serverless and event-driven architecture
+6) Continuous integration and deployment (CI/CD) using AWS CodePipeline
 
 &nbsp;
 
-## Overview
+## Architecture Diagram 
+**High-level, end-to-end diagram**
 
-The goal of AWS Bookstore Demo App is to provide a fully-functional web application that utilizes multiple purpose-built AWS databases and native AWS components like Amazon API Gateway and AWS CodePipeline. Increasingly, modern web apps are built using a multitude of different databases. Developers break their large applications into individual components and select the best database for each job. Let's consider AWS Bookstore Demo App as an example. The app contains multiple experiences such a shopping cart, product search, recommendations, and a top sellers list. For each of these use cases, the app makes use of a purpose-built database so the developer never has to compromise on functionality, performance, or scale. 
+![High-level Architectural Diagram](assets/readmeImages/ArchDiagram.png)
 
-The provided CloudFormation template automates the entire creation and deployment of AWS Bookstore Demo App.  The template includes the following components:
+The architecture diagram above illustrates the overall structure of the AWS Bookstore Demo Application. It shows how key AWS services are integrated to form a serverless, event-driven system. The frontend, hosted on Amazon S3 and delivered via CloudFront, interacts with backend APIs exposed through Amazon API Gateway. User authentication is handled by Amazon Cognito, while business logic is processed by AWS Lambda functions. Data is stored across purpose-built databases including DynamoDB, Elasticsearch, ElastiCache, and Neptune. This architecture enables high scalability, fault tolerance, and seamless integration of all application components without requiring manual server management.
 
-**Database components**
+## AWS Services Used
 
-* Product catalog/shopping cart - Amazon DynamoDB offers fast, predictable performance for the key-value lookups needed in the product catalog, as well as the shopping cart and order history.  In this implementation, we have unique identifiers, titles, descriptions, quantities, locations, and price.
-* Search - Amazon Elasticsearch Service enables full-text search for our storefront, enabling users to find products based on a variety of terms including author, title, and category.
-* Recommendations - Amazon Neptune provides social recommendations based on what user's friends have purchased, scaling as the storefront grows with more products, pages, and users.
-* Top sellers list - Amazon ElastiCache for Redis reads order information from Amazon DynamoDB Streams, creating a leaderboard of the “Top 20” purchased or rated books.
+| Component            | AWS Service                     | Purpose                                      |
+|--------------------|--------------------------------|---------------------------------------------|
+| Frontend Hosting     | Amazon S3 + CloudFront          | Hosts and delivers frontend content          |
+| Authentication      | Amazon Cognito                  | Manages user authentication                 |
+| API Management       | Amazon API Gateway             | Routes API requests                          |
+| Business Logic       | AWS Lambda                     | Handles backend logic                        |
+| Database             | Amazon DynamoDB                | Stores books, cart, orders                   |
+| Search Engine        | Amazon Elasticsearch Service   | Enables full-text search                     |
+| Caching              | Amazon ElastiCache (Redis)     | Speeds up frequently accessed data          |
+| Recommendation       | Amazon Neptune                 | Manages graph-based recommendations         |
+| CI/CD                | CodePipeline, CodeBuild        | Automates deployment                         |
 
-**Application components**
+Each AWS service in the application plays a critical role in delivering a fully serverless, scalable, and reliable online bookstore. By combining managed services for frontend hosting, authentication, API management, backend processing, data storage, caching, and search, the system minimizes operational overhead while ensuring high availability and low latency. This architecture allows the application to automatically scale based on demand, provides secure user access, and simplifies maintenance through automated deployment and monitoring.
 
-* Serverless service backend – Amazon API Gateway powers the interface layer between the frontend and backend, and invokes serverless compute with AWS Lambda.  
-* Web application blueprint – We include a React web application pre-integrated out-of-the-box with tools such as React Bootstrap, Redux, React Router, internationalization, and more.
-
-**Infrastructure components**
-
-* Continuous deployment code pipeline – AWS CodePipeline and AWS CodeBuild help you build, test, and release your application code. 
-* Serverless web application – Amazon CloudFront and Amazon S3 provide a globally-distributed application. 
-
-You can choose to customize the template to create your own bookstore, modify it to make a different type of store, or change it to make a completely different type of web application.  
-
-AWS Bookstore Demo App is built on-top of **[AWS Full-Stack Template](https://github.com/awslabs/aws-full-stack-template)**, which provides the foundational services, components, and plumbing needed to get a basic web application up and running. Users can build on top of AWS Full-Stack Template to create any application they envision, whether a travel booking tool, a blog, or another web app.  This AWS Bookstore Demo App is just one example of what you can create using AWS Full-Stack Template. 
+**Instructions**
+Frontend: Static website hosted on S3 and distributed via CloudFront
+	•	Authentication: Handled by Cognito with user pools and tokens
+	•	Backend: Business logic implemented with AWS Lambda, exposed via API Gateway
+	•	Database: DynamoDB for data storage; Elasticsearch for search; Redis for caching; Neptune for recommendations
+	•	CI/CD: Automated deployment with CodePipeline and CloudFormation templates
 
 &nbsp;
 
 ---
 
 &nbsp;
-
 ## Instructions
 
-***IMPORTANT NOTE**: Creating this demo application in your AWS account will create and consume AWS resources, which **will cost money**.  We estimate that running this demo application will cost ~**$0.45/hour** with light usage.  Be sure to shut down/remove all resources once you are finished to avoid ongoing charges to your AWS account (see instructions on cleaning up/tear down below).*
+- **Frontend:** Static website hosted on S3 and distributed via CloudFront
+- **Authentication:** Handled by Cognito with user pools and tokens
+- **Backend:** Business logic implemented with AWS Lambda, exposed via API Gateway
+- **Database:** DynamoDB for data storage
+- **Search:** Elasticsearch for search functionality
+- **Caching:** Redis (ElastiCache) for caching frequently accessed data
+- **Recommendation:** Neptune for managing recommendations
+- **CI/CD:** Automated deployment with CodePipeline and CloudFormation templates
+
 
 &nbsp;
 
